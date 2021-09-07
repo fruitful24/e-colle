@@ -414,13 +414,13 @@ def ajaxmajcolleur(request, id_matiere, id_classe):
     return mixteajaxmajcolleur(matiere,classe)
 
 @user_passes_test(is_colleur, login_url='accueil')
-def ajaxcolloscope(request, id_matiere, id_colleur, id_groupe, numero_semaine, id_creneau):
+def ajaxcolloscope(request, id_matiere, id_colleur, id_groupe, id_semaine, id_creneau):
     """Ajoute la colle propre au quintuplet (matière,colleur,groupe,semaine,créneau) et renvoie le username du colleur
     en effaçant au préalable toute colle déjà existante sur ce couple créneau/semaine"""
     matiere=get_object_or_404(Matiere,pk=id_matiere)
     colleur=get_object_or_404(Colleur,pk=id_colleur)
     groupe=get_object_or_404(Groupe,pk=id_groupe)
-    semaine=get_object_or_404(Semaine,numero=numero_semaine)
+    semaine=get_object_or_404(Semaine,pk=id_semaine)
     creneau=get_object_or_404(Creneau,pk=id_creneau)
     if not modifcolloscope(request.user.colleur,creneau.classe) or matiere not in colleur.matieres.all() or matiere not in creneau.classe.matieres.all():
         return HttpResponseForbidden("Accès non autorisé")
@@ -439,10 +439,10 @@ def ajaxcolloscopeeleve(request, id_matiere, id_colleur, id_eleve, id_semaine, i
     return mixteajaxcolloscopeeleve(matiere,colleur, id_eleve,semaine,creneau,login)
 
 @user_passes_test(is_colleur, login_url='accueil')
-def ajaxcolloscopeeffacer(request, numero_semaine, id_creneau):
-    """Efface la colle sur le créneau dont l'id est id_creneau et la semaine dont le numéro est numero_semaine
+def ajaxcolloscopeeffacer(request, id_semaine, id_creneau):
+    """Efface la colle sur le créneau dont l'id est id_creneau et la semaine dont le numéro est id_semaine
     puis renvoie la chaine de caractères "efface" """
-    semaine=get_object_or_404(Semaine,numero=numero_semaine)
+    semaine=get_object_or_404(Semaine,pk=id_semaine)
     creneau=get_object_or_404(Creneau,pk=id_creneau)
     if not modifcolloscope(request.user.colleur,creneau.classe):
         return HttpResponseForbidden("Accès non autorisé")
